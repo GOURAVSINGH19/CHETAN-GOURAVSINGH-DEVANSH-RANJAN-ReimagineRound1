@@ -131,12 +131,12 @@ var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 // Only enable OrbitControls if not on a mobile device
 if (!isMobile) {
   const controls = new OrbitControls(camera, canvas);
-  control.enableDamping = true;
-  control.enableZoom = false;
-  control.minDistance = 2;
-  control.maxDistance = 20;
-  control.minPolerAngle = 0.5;
-  control.maxPolerAngle = 1.5;
+  controls.enableDamping = true;
+  controls.enableZoom = false;
+  controls.minDistance = 2;
+  controls.maxDistance = 20;
+  controls.minPolerAngle = 0.5;
+  controls.maxPolerAngle = 1.5;
   }
 
 
