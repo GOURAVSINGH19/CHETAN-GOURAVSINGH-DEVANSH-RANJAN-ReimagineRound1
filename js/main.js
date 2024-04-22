@@ -36,9 +36,9 @@ loader.load(
   function (gltf) {
     //If the file is loaded, add it to the scene
     object = gltf.scene;
-    object.position.set(0, -0.2, 0);
+    object.position.set(0, -0.4, 0);
     object.rotation.set(-0.3,0,-0.1);
-    object.scale.set(2, 2, 2);
+    object.scale.set(4, 4, 4);
     object.castShadow = true;
     scene.add(object);
 
@@ -48,7 +48,7 @@ loader.load(
       onComplete: () => {
         gsap.from( { duration: 1, y: 100, ease: "power2.inOut", opacity:0 });
     }
-    });
+    })
   }
 );
 
@@ -97,21 +97,15 @@ scene.add(spotlight);
 
 const directionalLight = new THREE.DirectionalLight("white", 5);
 directionalLight.position.set(2, 1, 0);
+directionalLight.castShadow = true
 scene.add(directionalLight);
 // gui.add(directionalLight,'intensity').min(.01).max(5)
 
 const pointLight = new THREE.PointLight("white",5,100,1)
 pointLight.position.set(-.2,-1.2,0)
-pointLight.rotation.set(0,-1,0)
+pointLight.rotation.set(0,-1,-.2)
 scene.add(pointLight);
 
-// const sphereSize = 1;
-// const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
-// scene.add( pointLightHelper );
-// const spotlighthelper = new THREE.SpotLightHelper(spotlight,.2)
-// scene.add(spotlighthelper);
-// const helper = new THREE.DirectionalLightHelper(directionalLight, 2 );
-// scene.add( helper );
 
 const sizes = {
   width: window.innerWidth,
@@ -161,11 +155,11 @@ control.maxPolerAngle = 1.5
  */
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
-  // alpha:true
+  alpha:true
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setClearColor("black")
+// renderer.setClearColor("black")
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
