@@ -55,34 +55,34 @@ loader.load(
 
 
 //Create a particles
-// const particlesGeometry = new THREE.BufferGeometry()
-// const count = 20000
-// const position = new Float32Array(count * 3)
-// const Colors  = new Float32Array(count * 3)
+const particlesGeometry = new THREE.BufferGeometry()
+const count = 20000
+const position = new Float32Array(count * 3)
+const Colors  = new Float32Array(count * 3)
 
-// for (let i = 0; i < count * 3; i++){
-//     position[i] =( Math.random() - .5) * 10
-//     Colors[i] = Math.random() 
-// }
-// particlesGeometry.setAttribute(
-//     'position',
-//     new THREE.BufferAttribute(position, 3),
-// )
-// particlesGeometry.setAttribute(
-//     'color',
-//     new THREE.BufferAttribute(Colors,3)
-// )
+for (let i = 0; i < count * 3; i++){
+    position[i] =( Math.random() - .5) * 10
+    Colors[i] = Math.random() 
+}
+particlesGeometry.setAttribute(
+    'position',
+    new THREE.BufferAttribute(position, 3),
+)
+particlesGeometry.setAttribute(
+    'color',
+    new THREE.BufferAttribute(Colors,3)
+)
 
-// const particlesMaterial = new THREE.PointsMaterial()
+const particlesMaterial = new THREE.PointsMaterial()
 // particlesMaterial.map = texture
-// particlesMaterial.size = .3
-// particlesMaterial.sizeAttenuation = true
-// particlesMaterial.depthWrite = false
-// particlesMaterial.blending =  THREE.AdditiveBlending
-// particlesMaterial.vertexColors = THREE.VertexColors
-// const particles  = new THREE.Points(particlesGeometry,particlesMaterial)
+particlesMaterial.size = .04
+particlesMaterial.sizeAttenuation = true
+particlesMaterial.depthWrite = false
+particlesMaterial.blending =  THREE.AdditiveBlending
+particlesMaterial.vertexColors = THREE.VertexColors
+const particles  = new THREE.Points(particlesGeometry,particlesMaterial)
 
-// scene.add(particles)
+scene.add(particles)
 
 //Add lights to the scene, so we can actually see the 3D model
 
@@ -161,10 +161,11 @@ control.maxPolerAngle = 1.5
  */
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
-  alpha:true
+  // alpha:true
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor("black")
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
