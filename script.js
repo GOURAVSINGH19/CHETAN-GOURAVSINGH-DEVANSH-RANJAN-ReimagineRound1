@@ -48,3 +48,4 @@ tl.to(".text h1", {
   duration: 1,
   delay: 1.2,
 });
+

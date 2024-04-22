@@ -13,12 +13,8 @@ const canvas = document.querySelector(".canvas");
 const scene = new THREE.Scene();
 // const gui = new datGui.GUI();
 
-
-
 // const textureLoader = new THREE.TextureLoader()
 // const texture = textureLoader.load('./static/textures/particles/4.png')
-
-
 
 //Keep the 3D object on a global variable so we can access it later
 let object;
@@ -31,81 +27,71 @@ let objToRender = "cola_can";
 //Instantiate a loader for the .gltf file
 const loader = new GLTFLoader();
 //Load the file
-loader.load(
-  `models/${objToRender}/scene.gltf`,
-  function (gltf) {
-    //If the file is loaded, add it to the scene
-    object = gltf.scene;
-    object.position.set(0, -0.4, 0);
-    object.rotation.set(-0.3,0,-0.1);
-    object.scale.set(4, 4, 4);
-    object.castShadow = true;
-    scene.add(object);
+loader.load(`models/${objToRender}/scene.gltf`, function (gltf) {
+  //If the file is loaded, add it to the scene
+  object = gltf.scene;
+  object.position.set(0, -0.2, 0);
+  object.rotation.set(-0.3, 0, -0.1);
+  object.scale.set(2, 2, 2);
+  object.castShadow = true;
+  scene.add(object);
 
-    gsap.from(object.position, {
-      duration: 1,
-      y: 0,
-      onComplete: () => {
-        gsap.from( { duration: 1, y: 100, ease: "power2.inOut", opacity:0 });
-    }
-    })
-  }
-);
-
-
+  gsap.from(object.position, {
+    duration: 1,
+    y: 0,
+    onComplete: () => {
+      gsap.from({ y: 100, ease: "power2.inOut", opacity: 0 });
+    },
+  });
+});
 
 //Create a particles
-const particlesGeometry = new THREE.BufferGeometry()
-const count = 20000
-const position = new Float32Array(count * 3)
-const Colors  = new Float32Array(count * 3)
+const particlesGeometry = new THREE.BufferGeometry();
+const count = 20000;
+const position = new Float32Array(count * 3);
+const Colors = new Float32Array(count * 3);
 
-for (let i = 0; i < count * 3; i++){
-    position[i] =( Math.random() - .5) * 10
-    Colors[i] = Math.random() 
+for (let i = 0; i < count * 3; i++) {
+  position[i] = (Math.random() - 0.5) * 10;
+  Colors[i] = Math.random();
 }
 particlesGeometry.setAttribute(
-    'position',
-    new THREE.BufferAttribute(position, 3),
-)
-particlesGeometry.setAttribute(
-    'color',
-    new THREE.BufferAttribute(Colors,3)
-)
+  "position",
+  new THREE.BufferAttribute(position, 3)
+);
+particlesGeometry.setAttribute("color", new THREE.BufferAttribute(Colors, 3));
 
-const particlesMaterial = new THREE.PointsMaterial()
+const particlesMaterial = new THREE.PointsMaterial();
 // particlesMaterial.map = texture
-particlesMaterial.size = .04
-particlesMaterial.sizeAttenuation = true
-particlesMaterial.depthWrite = false
-particlesMaterial.blending =  THREE.AdditiveBlending
-particlesMaterial.vertexColors = THREE.VertexColors
-const particles  = new THREE.Points(particlesGeometry,particlesMaterial)
+particlesMaterial.size = 0.04;
+particlesMaterial.sizeAttenuation = true;
+particlesMaterial.depthWrite = false;
+particlesMaterial.blending = THREE.AdditiveBlending;
+particlesMaterial.vertexColors = THREE.VertexColors;
+const particles = new THREE.Points(particlesGeometry, particlesMaterial);
 
-scene.add(particles)
+scene.add(particles);
 
 //Add lights to the scene, so we can actually see the 3D model
 
-const ambientLight = new THREE.AmbientLight("white",8)
+const ambientLight = new THREE.AmbientLight("white", 8);
 scene.add(ambientLight);
 
-const spotlight = new THREE.SpotLight(0Xffffff,5,100,.2,.3);
-spotlight.position.set(-2,1,0)
-spotlight.castShadow = true
+const spotlight = new THREE.SpotLight(0xffffff, 5, 100, 0.2, 0.3);
+spotlight.position.set(-2, 1, 0);
+spotlight.castShadow = true;
 scene.add(spotlight);
-
 
 const directionalLight = new THREE.DirectionalLight("white", 5);
 directionalLight.position.set(2, 1, 0);
-directionalLight.castShadow = true
+directionalLight.castShadow = true;
 scene.add(directionalLight);
 // gui.add(directionalLight,'intensity').min(.01).max(5)
 
-const pointLight = new THREE.PointLight("white",5,100,1)
-pointLight.position.set(-.2,-1.2,0)
-pointLight.rotation.set(0,-1,-.2)
+const pointLight = new THREE.PointLight("white", 5, 100, 1);
+pointLight.position.set(-0.2, -1.2, 0);
+pointLight.rotation.set(0, -1, -0.2);
 scene.add(pointLight);
-
 
 const sizes = {
   width: window.innerWidth,
@@ -136,8 +122,8 @@ const camera = new THREE.PerspectiveCamera(
   1,
   1000
 );
-camera.position.set(-10,3,6);
-camera.lookAt(0,0,0)
+camera.position.set(-10, 3, 6);
+camera.lookAt(0, 0, 0);
 scene.add(camera);
 
 // Controls
@@ -145,23 +131,23 @@ const control = new OrbitControls(camera, canvas);
 control.enableDamping = true;
 control.enableZoom = false;
 control.minDistance = 2;
-control.maxDistance = 20
-control.minPolerAngle = .5
-control.maxPolerAngle = 1.5
-
+control.maxDistance = 20;
+control.minPolerAngle = 0.5;
+control.maxPolerAngle = 1.5;
 
 /**
  * Renderer
  */
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
-  alpha:true
+  // alpha: true,
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-// renderer.setClearColor("black")
+renderer.setClearColor("black")
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
 
 /**
  * Animate
@@ -173,6 +159,8 @@ const tick = () => {
 
   // Update controls
   control.update();
+
+
 
   // Render
   renderer.render(scene, camera);
