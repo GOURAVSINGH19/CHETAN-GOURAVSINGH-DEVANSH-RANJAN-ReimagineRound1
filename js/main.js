@@ -46,31 +46,31 @@ loader.load(`models/${objToRender}/scene.gltf`, function (gltf) {
 });
 
 //Create a particles
-const particlesGeometry = new THREE.BufferGeometry();
-const count = 20000;
-const position = new Float32Array(count * 3);
-const Colors = new Float32Array(count * 3);
+// const particlesGeometry = new THREE.BufferGeometry();
+// const count = 20000;
+// const position = new Float32Array(count * 3);
+// const Colors = new Float32Array(count * 3);
 
-for (let i = 0; i < count * 3; i++) {
-  position[i] = (Math.random() - 0.5) * 10;
-  Colors[i] = Math.random();
-}
-particlesGeometry.setAttribute(
-  "position",
-  new THREE.BufferAttribute(position, 3)
-);
-particlesGeometry.setAttribute("color", new THREE.BufferAttribute(Colors, 3));
+// for (let i = 0; i < count * 3; i++) {
+//   position[i] = (Math.random() - 0.5) * 10;
+//   Colors[i] = Math.random();
+// }
+// particlesGeometry.setAttribute(
+//   "position",
+//   new THREE.BufferAttribute(position, 3)
+// );
+// particlesGeometry.setAttribute("color", new THREE.BufferAttribute(Colors, 3));
 
-const particlesMaterial = new THREE.PointsMaterial();
-// particlesMaterial.map = texture
-particlesMaterial.size = 0.04;
-particlesMaterial.sizeAttenuation = true;
-particlesMaterial.depthWrite = false;
-particlesMaterial.blending = THREE.AdditiveBlending;
-particlesMaterial.vertexColors = THREE.VertexColors;
-const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+// const particlesMaterial = new THREE.PointsMaterial();
+// // particlesMaterial.map = texture
+// particlesMaterial.size = 0.04;
+// particlesMaterial.sizeAttenuation = true;
+// particlesMaterial.depthWrite = false;
+// particlesMaterial.blending = THREE.AdditiveBlending;
+// particlesMaterial.vertexColors = THREE.VertexColors;
+// const particles = new THREE.Points(particlesGeometry, particlesMaterial);
 
-scene.add(particles);
+// scene.add(particles);
 
 //Add lights to the scene, so we can actually see the 3D model
 
@@ -126,14 +126,19 @@ camera.position.set(-10, 3, 6);
 camera.lookAt(0, 0, 0);
 scene.add(camera);
 
-// Controls
-const control = new OrbitControls(camera, canvas);
-control.enableDamping = true;
-control.enableZoom = false;
-control.minDistance = 2;
-control.maxDistance = 20;
-control.minPolerAngle = 0.5;
-control.maxPolerAngle = 1.5;
+// Check if the device is a mobile device
+var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+// Only enable OrbitControls if not on a mobile device
+if (!isMobile) {
+  const controls = new OrbitControls(camera, canvas);
+  control.enableDamping = true;
+  control.enableZoom = false;
+  control.minDistance = 2;
+  control.maxDistance = 20;
+  control.minPolerAngle = 0.5;
+  control.maxPolerAngle = 1.5;
+  }
+
 
 /**
  * Renderer
@@ -144,7 +149,7 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setClearColor("black")
+renderer.setClearColor("#E7D0BB")
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -159,8 +164,6 @@ const tick = () => {
 
   // Update controls
   control.update();
-
-
 
   // Render
   renderer.render(scene, camera);
