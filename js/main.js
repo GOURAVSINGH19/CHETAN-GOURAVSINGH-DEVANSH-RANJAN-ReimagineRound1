@@ -30,9 +30,9 @@ const loader = new GLTFLoader();
 loader.load(`models/${objToRender}/scene.gltf`, function (gltf) {
   //If the file is loaded, add it to the scene
   object = gltf.scene;
-  object.position.set(0, -0.2, 0);
+  object.position.set(0, -0.3, 0);
   object.rotation.set(-0.3, 0, -0.1);
-  object.scale.set(2, 2, 2);
+  object.scale.set(2.4, 2.4, 2.4);
   object.castShadow = true;
   scene.add(object);
 
@@ -46,31 +46,31 @@ loader.load(`models/${objToRender}/scene.gltf`, function (gltf) {
 });
 
 //Create a particles
-// const particlesGeometry = new THREE.BufferGeometry();
-// const count = 20000;
-// const position = new Float32Array(count * 3);
-// const Colors = new Float32Array(count * 3);
+const particlesGeometry = new THREE.BufferGeometry();
+const count = 2000;
+const position = new Float32Array(count * 3);
+const Colors = new Float32Array(count * 3);
 
-// for (let i = 0; i < count * 3; i++) {
-//   position[i] = (Math.random() - 0.5) * 10;
-//   Colors[i] = Math.random();
-// }
-// particlesGeometry.setAttribute(
-//   "position",
-//   new THREE.BufferAttribute(position, 3)
-// );
-// particlesGeometry.setAttribute("color", new THREE.BufferAttribute(Colors, 3));
+for (let i = 0; i < count * 3; i++) {
+  position[i] = (Math.random() - 0.5) * 10;
+  Colors[i] = Math.random();
+}
+particlesGeometry.setAttribute(
+  "position",
+  new THREE.BufferAttribute(position, 3)
+);
+particlesGeometry.setAttribute("color", new THREE.BufferAttribute(Colors, 3));
 
-// const particlesMaterial = new THREE.PointsMaterial();
-// // particlesMaterial.map = texture
-// particlesMaterial.size = 0.04;
-// particlesMaterial.sizeAttenuation = true;
-// particlesMaterial.depthWrite = false;
-// particlesMaterial.blending = THREE.AdditiveBlending;
-// particlesMaterial.vertexColors = THREE.VertexColors;
-// const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+const particlesMaterial = new THREE.PointsMaterial();
+// particlesMaterial.map = texture
+particlesMaterial.size = 0.04;
+particlesMaterial.sizeAttenuation = true;
+particlesMaterial.depthWrite = false;
+particlesMaterial.blending = THREE.AdditiveBlending;
+particlesMaterial.vertexColors = THREE.VertexColors;
+const particles = new THREE.Points(particlesGeometry, particlesMaterial);
 
-// scene.add(particles);
+scene.add(particles);
 
 //Add lights to the scene, so we can actually see the 3D model
 
@@ -116,6 +116,8 @@ window.addEventListener("resize", () => {
  * Camera
  */
 // Base camera
+const cameragroup = new THREE.Group();
+scene.add(cameragroup)
 const camera = new THREE.PerspectiveCamera(
   5,
   sizes.width / sizes.height,
@@ -124,20 +126,23 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.set(-10, 3, 6);
 camera.lookAt(0, 0, 0);
-scene.add(camera);
+cameragroup.add(camera);
 
-// Check if the device is a mobile device
-var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-// Only enable OrbitControls if not on a mobile device
-if (!isMobile) {
-  const controls = new OrbitControls(camera, canvas);
-  controls.enableDamping = true;
-  controls.enableZoom = false;
-  controls.minDistance = 2;
-  controls.maxDistance = 20;
-  controls.minPolerAngle = 0.5;
-  controls.maxPolerAngle = 1.5;
-  }
+// Controls
+// const control = new OrbitControls(camera, canvas);
+// control.enableDamping = true;
+// control.enableZoom = false;
+// control.minDistance = 2;
+// control.maxDistance = 30;
+// control.minPolerAngle = 0.5;
+// control.maxPolerAngle = 1.5;
+// control.autoRotateSpeed =.3
+// control.keys = {
+// 	LEFT: '10', //left arrow
+// 	UP: '0', // up arrow
+// 	RIGHT: '10', // right arrow
+// 	BOTTOM: '0' // down arrow
+// }
 
 
 /**
@@ -145,13 +150,31 @@ if (!isMobile) {
  */
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
-  // alpha: true,
+  alpha: true,
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setClearColor("#E7D0BB")
+// renderer.setClearColor("#E7D0BB")
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+// scroll
+// let scrolly=window.scrollY
+// window.addEventListener("scroll",()=>{
+//     scrolly=window.scrollY
+// })
+
+const cursor = {};
+cursor.x =0;
+cursor.y=0
+
+window.addEventListener("mousemove",(e)=>{
+  cursor.x = ( e.clientX / window.innerWidth )  * .05;
+  cursor.y =  ( e.clientY / window.innerHeight )  * .05;
+})
+
+
+
 
 
 /**
@@ -163,7 +186,18 @@ const tick = () => {
   const elapsedTime = clock.getElapsedTime();
 
   // Update controls
-  control.update();
+  // control.update();
+
+  
+  //animate camera
+
+   //animate parallax
+   const parallaxX = cursor.x
+   const parallaxY = -cursor.y
+ 
+   cameragroup.position.x = parallaxX
+   cameragroup.position.y =  parallaxY
+ 
 
   // Render
   renderer.render(scene, camera);
